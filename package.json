@@ -1,0 +1,19 @@
+{
+  "name": "autojs-apps",
+  "version": "1.0.0",
+  "description": "autojs 的脚本",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Assan233/autojs-apps.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Assan233/autojs-apps/issues"
+  },
+  "homepage": "https://github.com/Assan233/autojs-apps#readme"
+}
