@@ -1,5 +1,5 @@
 {
-    "name": "qq消息",
+    "name": "pick-card",
     "main": "main.js",
     "ignore": [
         "build"
