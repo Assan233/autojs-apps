@@ -5,11 +5,9 @@ function main() {
 function pickCard() {
   // 启动应用
   var packageName = app.getPackageName("钉钉");
-  killApp(packageName);
-
-  console.log(packageName);
   launch(packageName);
   waitTime(6, "等待钉钉启动");
+  
   // 打开工作台
   text("工作台").findOnce().parent().click();
   waitTime(1, "打开工作台");
