@@ -119,7 +119,8 @@ function scheduleRandomProgramExecution(executeProgram) {
         (currentHour === 19 && currentMinute >= 0))
     ) {
       // 随机生成一个介于 -10 和 10 之间的整数，表示随机分钟数
-      const randomMinutes = Math.floor(Math.random() * 21) - 10;
+      // const randomMinutes = Math.floor(Math.random() * 21) - 10;
+      const randomMinutes = 0;
 
       // 计算实际执行时间
       const executionTime = new Date(now.getTime() + randomMinutes * 60000);
