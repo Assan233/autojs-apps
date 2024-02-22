@@ -6,6 +6,9 @@ function main() {
  * 打卡
  */
 function pickCard() {
+  device.wakeUp()
+  waitTime(5, "唤醒屏幕");
+
   // 启动应用
   var packageName = app.getPackageName("钉钉");
   launch(packageName);
