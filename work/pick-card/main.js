@@ -1,39 +1,175 @@
+/**
+ * 常量
+ */
+const DEVICE_TYPE = {
+  k40: 0,
+  realmeX: 1,
+};
+const DEFAULT_STATUS = {
+  day: -1,
+  start: false,
+  end: false,
+};
+const PICK_TIME = {
+  start: { hour: 9, min: 10 },
+  end: { hour: 19, min: 0 },
+};
+
+/**
+ * 全局变量
+ */
+// 缓存 上下班是否打卡
+let workStatus = Object.assign({}, DEFAULT_STATUS);
+
+/**
+ * 功能代码
+ */
 function main() {
+  // pickCard();
   scheduleRandomProgramExecution(pickCard);
 }
+main();
 
 /**
  * 打卡
  */
 function pickCard() {
-  device.wakeUp()
+  updateWorkStatus();
+
+  // 唤醒屏幕
+  device.wakeUp();
   waitTime(5, "唤醒屏幕");
+  const points = getPoints(DEVICE_TYPE.k40);
 
   // 启动应用
   var packageName = app.getPackageName("钉钉");
   launch(packageName);
-  waitTime(6, "等待钉钉启动");
+  waitTime(8, "等待钉钉启动");
 
   // 打开工作台
-  text("工作台").findOnce().parent().click();
-  waitTime(3, "打开工作台");
+  text("工作台").findOnce().parent().parent().click();
+  waitTime(8, "打开工作台");
 
   // 打开考勤系统
-  // text("考勤系统").findOnce().parent().click();
-  click(150, 1380);
+  click(points.kqPoint[0], points.kqPoint[1]);
   waitTime(8, "打开考勤系统");
 
   // 打卡
-  click(540, 1900);
-  waitTime(5, "重试打卡");
-  click(540, 1900);
+  click(points.pickPoint[0], points.pickPoint[1]);
+  waitTime(5, "打卡");
+  click(points.pickPoint[0], points.pickPoint[1]);
   waitTime(5, "重试打卡");
 
   // 退出app
   killApp("钉钉");
   console.log(`完成打卡：${new Date().toLocaleString()}`);
+
+  // 打卡结束，更新状态
+  updateWorkStatus();
+  console.log("更新打卡状态");
 }
-main();
+
+/**
+ * 获取打卡所需坐标
+ * @param {string} type DEVICE_TYPE
+ */
+function getPoints(type) {
+  switch (type) {
+    case DEVICE_TYPE.k40: {
+      return {
+        kqPoint: [150, 1380],
+        pickPoint: [540, 1900],
+      };
+    }
+    case DEVICE_TYPE.realmeX: {
+      return {
+        kqPoint: [130, 1425],
+        pickPoint: [530, 1835],
+      };
+    }
+  }
+}
+
+/**
+ * 更新每日打卡状态
+ */
+function updateWorkStatus() {
+  const now = new Date();
+  const currentDay = now.getDay();
+  const currentHour = now.getHours();
+
+  switch (currentHour) {
+    // 上班
+    case PICK_TIME.start.hour:
+      workStatus.day = currentDay;
+      workStatus.start = true;
+      break;
+    // 下班
+    case PICK_TIME.end.hour:
+      workStatus.day = currentDay;
+      workStatus.end = true;
+      break;
+  }
+}
+/**
+ * 检查WorkStatus状态，确认能不能执行打卡任务
+ */
+function checkWorkStatus() {
+  const now = new Date();
+  const currentHour = now.getHours();
+  const currentDay = now.getDay();
+
+  // 如果不是同一天，重置 workStatus
+  if (currentDay !== workStatus.day) {
+    workStatus = Object.assign({}, DEFAULT_STATUS, { day: currentDay });
+  }
+
+  const allowStart =
+    currentHour === PICK_TIME.start.hour && workStatus.start === false;
+  const allowEnd =
+    currentHour === PICK_TIME.end.hour && workStatus.end === false;
+
+  return allowStart || allowEnd;
+}
+
+/**
+ * 工作日固定时间执行程序
+ * @param {any} executeProgram 执行的程序
+ */
+function scheduleRandomProgramExecution(executeProgram) {
+  const weekdays = [1, 2, 3, 4, 5]; // 1 表示星期一，以此类推
+
+  setInterval(() => {
+    const now = new Date();
+    const currentDay = now.getDay();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+
+    // 检查是否是工作日，并且在指定的时间范围内
+    if (
+      weekdays.includes(currentDay) &&
+      ((currentHour === PICK_TIME.start.hour &&
+        currentMinute >= PICK_TIME.start.min) ||
+        (currentHour === PICK_TIME.end.hour &&
+          currentMinute >= PICK_TIME.end.min))
+    ) {
+      // 检查是否可以打卡
+      const allowPickCard = checkWorkStatus();
+      if (allowPickCard) {
+        // 随机生成一个介于 -10 和 10 之间的整数，表示随机分钟数
+        // const randomMinutes = Math.floor(Math.random() * 21) - 10;
+        const randomMinutes = 0;
+
+        // 计算实际执行时间
+        const executionTime = new Date(now.getTime() + randomMinutes * 60000);
+
+        // 执行程序
+        console.log(`计划在 ${executionTime.toLocaleTimeString()} 执行程序`);
+        setTimeout(executeProgram, randomMinutes * 60000);
+      }
+    }
+  }, 60000); // 每隔一分钟检查一次
+}
 
 /**  ====== utils ======== **/
 function waitTime(seconds, txt) {
@@ -81,53 +217,20 @@ function killApp(appName) {
 
         // 存在关键字
         if (forcedStop.enabled()) {
-          // 点击-结束运行
-          text("结束运行").waitFor();
-          var killBtn = text("结束运行").findOne().bounds();
+          // 点击-强行停止
+          text("强行停止").waitFor();
+          var killBtn = text("强行停止").findOne().bounds();
           click(killBtn.centerX(), killBtn.centerY());
-          waitTime(1, "点击-结束运行");
+          waitTime(1, "点击-强行停止");
 
           // 点击-确定
           forcedStop.click();
-          text("确定").findOne().click();
-          waitTime(1, "点击-确定");
+          text("强行停止").findOne().click();
+          waitTime(1, "点击 强行停止-确定");
           home();
           break;
         }
       }
     }
   }
-}
-
-/**
- * 工作日固定时间执行程序
- * @param {any} executeProgram 执行的程序
- */
-function scheduleRandomProgramExecution(executeProgram) {
-  const weekdays = [1, 2, 3, 4, 5]; // 1 表示星期一，以此类推
-
-  setInterval(() => {
-    const now = new Date();
-    const currentDay = now.getDay();
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
-
-    // 检查是否是工作日，并且在指定的时间范围内
-    if (
-      weekdays.includes(currentDay) &&
-      ((currentHour === 9 && currentMinute >= 10) ||
-        (currentHour === 19 && currentMinute >= 0))
-    ) {
-      // 随机生成一个介于 -10 和 10 之间的整数，表示随机分钟数
-      // const randomMinutes = Math.floor(Math.random() * 21) - 10;
-      const randomMinutes = 0;
-
-      // 计算实际执行时间
-      const executionTime = new Date(now.getTime() + randomMinutes * 60000);
-
-      // 执行程序
-      console.log(`计划在 ${executionTime.toLocaleTimeString()} 执行程序`);
-      setTimeout(executeProgram, randomMinutes * 60000);
-    }
-  }, 60000); // 每隔一分钟检查一次
 }
