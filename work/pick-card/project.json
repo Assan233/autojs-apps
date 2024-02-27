@@ -1,13 +1,13 @@
 {
-    "name": "pick-card",
-    "main": "main.js",
+    "name": "pickCard",
+    "main": "pickCard.js",
     "ignore": [
         "build"
     ],
     "launchConfig": {
         "hideLogs": true
     },
-    "packageName": "com.example.qqmsg",
+    "packageName": "com.example.pickCard",
     "versionName": "1.5.0",
     "versionCode": 5
 }
