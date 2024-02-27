@@ -1,7 +1,7 @@
 
 //定义要编译的项目，compile， true 表示编译，false，不编译
 var projects = [ //项目数组，放的是每一个要编译的项目，
-  { id: 1, compile: true, name: "websocket", main: "./main.js" },
+  { id: 1, compile: true, name: "subway-card", main: "./pickCard.js" },
   {
     id: 2, compile: true, name: "pick-card", main: "./main.js",
     others: ['./main.js'] //其他需要编译的文件,可以包含入口，也可不包含

@@ -1,0 +1,10 @@
+{
+    "name": "subwayCard",
+    "main": "subwayCard.js",
+    "ignore": [
+        "build"
+    ],
+    "packageName": "com.example.subwayCard",
+    "versionName": "1.7.0",
+    "versionCode": 17
+}
