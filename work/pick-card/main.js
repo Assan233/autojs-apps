@@ -158,8 +158,8 @@ function scheduleRandomProgramExecution(executeProgram) {
       // 检查是否可以打卡
       const allowPickCard = checkWorkStatus();
       if (allowPickCard) {
-        // 随机生成一个介于 -10 和 10 之间的整数，表示随机分钟数
-        const randomMinutes = Math.floor(Math.random() * 21) - 10;
+        // 随机生成一个介于 -8 和 8 之间的整数，表示随机分钟数
+        const randomMinutes = Math.floor(Math.random() * 17) - 8;
         // const randomMinutes = 0;
 
         // 计算实际执行时间
