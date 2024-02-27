@@ -14,6 +14,8 @@ const PICK_TIME = {
   start: { hour: 9, min: 10 },
   end: { hour: 19, min: 0 },
 };
+// 检查间隔时间
+const CHECK_TIME_SPACE = 60 * 1000 * 1;
 
 /**
  * 全局变量
@@ -57,8 +59,8 @@ function pickCard() {
   // 打卡
   click(points.pickPoint[0], points.pickPoint[1]);
   waitTime(5, "打卡");
-  click(points.pickPoint[0], points.pickPoint[1]);
-  waitTime(5, "重试打卡");
+  // click(points.pickPoint[0], points.pickPoint[1]);
+  // waitTime(5, "重试打卡");
 
   // 退出app
   killApp("钉钉");
@@ -157,8 +159,8 @@ function scheduleRandomProgramExecution(executeProgram) {
       const allowPickCard = checkWorkStatus();
       if (allowPickCard) {
         // 随机生成一个介于 -10 和 10 之间的整数，表示随机分钟数
-        // const randomMinutes = Math.floor(Math.random() * 21) - 10;
-        const randomMinutes = 0;
+        const randomMinutes = Math.floor(Math.random() * 21) - 10;
+        // const randomMinutes = 0;
 
         // 计算实际执行时间
         const executionTime = new Date(now.getTime() + randomMinutes * 60000);
@@ -168,7 +170,7 @@ function scheduleRandomProgramExecution(executeProgram) {
         setTimeout(executeProgram, randomMinutes * 60000);
       }
     }
-  }, 60000); // 每隔一分钟检查一次
+  }, CHECK_TIME_SPACE); // 每隔一段时间检查一次
 }
 
 /**  ====== utils ======== **/
