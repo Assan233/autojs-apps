@@ -3,6 +3,7 @@ var projects = [
   //项目数组，放的是每一个要编译的项目，
   { id: 1, compile: true, name: "subway-card", main: "./subwayCard.js" },
   { id: 2, compile: true, name: "pick-card", main: "./pickCard.js" },
+  { id: 3, compile: true, name: "wechat-pay", main: "./wechatPay.js" },
 ];
 
 var config = {

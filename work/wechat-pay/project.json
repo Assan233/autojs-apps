@@ -1,0 +1,10 @@
+{
+    "name": "wechatPay",
+    "main": "wechatPay.js",
+    "ignore": [
+        "build"
+    ],
+    "packageName": "com.example.wechatPay",
+    "versionName": "1.7.0",
+    "versionCode": 17
+}
