@@ -36,8 +36,6 @@ main();
  * 打卡
  */
 function pickCard() {
-  updateWorkStatus();
-
   // 唤醒屏幕
   device.wakeUp();
   waitTime(5, "唤醒屏幕");
@@ -65,10 +63,6 @@ function pickCard() {
   // 退出app
   killApp("钉钉");
   console.log(`完成打卡：${new Date().toLocaleString()}`);
-
-  // 打卡结束，更新状态
-  updateWorkStatus();
-  console.log("更新打卡状态");
 }
 
 /**
@@ -158,8 +152,12 @@ function scheduleRandomProgramExecution(executeProgram) {
       // 检查是否可以打卡
       const allowPickCard = checkWorkStatus();
       if (allowPickCard) {
-        // 随机生成一个介于 -8 和 8 之间的整数，表示随机分钟数
-        const randomMinutes = Math.floor(Math.random() * 17) - 8;
+        // 更新每日打卡状态
+        console.log("更新打卡状态");
+        updateWorkStatus();
+
+        // 随机生成一个介于 0 和 20 之间的整数，表示随机分钟数
+        const randomMinutes = Math.floor(Math.random() * 21);
         // const randomMinutes = 0;
 
         // 计算实际执行时间
