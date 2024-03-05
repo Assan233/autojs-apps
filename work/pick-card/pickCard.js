@@ -11,11 +11,12 @@ const DEFAULT_STATUS = {
   end: false,
 };
 const PICK_TIME = {
-  start: { hour: 9, min: 10 },
-  end: { hour: 19, min: 0 },
+  start: { hour: 9, min: 20 },
+  end: { hour: 19, min: 10 },
 };
 // 检查间隔时间
 const CHECK_TIME_SPACE = 60 * 1000 * 1;
+const SELF_PACKAGE_NAME = "com.script.pickCard";
 
 /**
  * 全局变量
@@ -57,12 +58,14 @@ function pickCard() {
   // 打卡
   click(points.pickPoint[0], points.pickPoint[1]);
   waitTime(5, "打卡");
-  // click(points.pickPoint[0], points.pickPoint[1]);
-  // waitTime(5, "重试打卡");
 
   // 退出app
   killApp("钉钉");
-  console.log(`完成打卡：${new Date().toLocaleString()}`);
+  waitTime(8, `完成打卡：${new Date().toLocaleString()}`);
+
+  // 唤醒打卡软件到前台
+  launch(SELF_PACKAGE_NAME);
+  waitTime(5, "唤醒打卡软件到前台");
 }
 
 /**
@@ -156,8 +159,8 @@ function scheduleRandomProgramExecution(executeProgram) {
         console.log("更新打卡状态");
         updateWorkStatus();
 
-        // 随机生成一个介于 0 和 20 之间的整数，表示随机分钟数
-        const randomMinutes = Math.floor(Math.random() * 21);
+        // 随机生成一个介于 0 和 10 之间的整数，表示随机分钟数
+        const randomMinutes = Math.floor(Math.random() * 10);
         // const randomMinutes = 0;
 
         // 计算实际执行时间
