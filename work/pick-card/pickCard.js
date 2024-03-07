@@ -60,8 +60,14 @@ function pickCard() {
   waitTime(5, "打卡");
 
   // 退出app
-  killApp("钉钉");
-  waitTime(8, `完成打卡：${new Date().toLocaleString()}`);
+  // killApp("钉钉");
+  // waitTime(8, `完成打卡：${new Date().toLocaleString()}`);
+
+  // 重置钉钉tab聚焦
+  launch(packageName);
+  waitTime(8, "启动钉钉主应用");
+  text("消息").findOnce().parent().parent().click();
+  waitTime(5, "切换消息Tab");
 
   // 唤醒打卡软件到前台
   launch(SELF_PACKAGE_NAME);
