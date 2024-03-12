@@ -23,6 +23,8 @@ const SELF_PACKAGE_NAME = "com.script.pickCard";
  */
 // 缓存 上下班是否打卡
 let workStatus = Object.assign({}, DEFAULT_STATUS);
+// 上一次唤醒屏幕的时间
+let lastWakeUpTime = Date.now();
 
 /**
  * 功能代码
@@ -143,6 +145,20 @@ function checkWorkStatus() {
 }
 
 /**
+ * 检查当前时间段 是否需要唤醒屏幕
+ */
+function checkNeedWakeUp() {
+  const now = Date.now();
+  const diff = now - lastWakeUpTime;
+  const needWakeUp = diff > 1000 * 60 * 60 * 10; // 10小时唤醒一次
+  // 唤醒屏幕
+  if (needWakeUp) {
+    device.wakeUp();
+    lastWakeUpTime = now;
+  }
+}
+
+/**
  * 工作日固定时间执行程序
  * @param {any} executeProgram 执行的程序
  */
@@ -154,6 +170,9 @@ function scheduleRandomProgramExecution(executeProgram) {
     const currentDay = now.getDay();
     const currentHour = now.getHours();
     const currentMinute = now.getMinutes();
+
+    // 检查是否需要唤醒屏幕
+    checkNeedWakeUp();
 
     // 检查是否是工作日，并且在指定的时间范围内
     if (
