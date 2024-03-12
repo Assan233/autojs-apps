@@ -45,7 +45,12 @@ function pickCard() {
   // 启动应用
   var packageName = app.getPackageName("钉钉");
   launch(packageName);
-  waitTime(8, "等待钉钉启动");
+  waitTime(15, "等待钉钉启动");
+
+  // 消除更新提示
+  const updateDom = text("暂不更新").findOnce();
+  updateDom && updateDom.click();
+  waitTime(3, "消除更新提示");
 
   // 打开工作台
   text("工作台").findOnce().parent().parent().click();
