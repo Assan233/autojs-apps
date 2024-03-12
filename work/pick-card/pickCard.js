@@ -150,7 +150,7 @@ function checkWorkStatus() {
 function checkNeedWakeUp() {
   const now = Date.now();
   const diff = now - lastWakeUpTime;
-  const needWakeUp = diff > 1000 * 60 * 60 * 10; // 10小时唤醒一次
+  const needWakeUp = diff > 1000 * 60 * 60 * 8; // 8小时唤醒一次
   // 唤醒屏幕
   if (needWakeUp) {
     device.wakeUp();
