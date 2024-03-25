@@ -11,12 +11,13 @@ const DEFAULT_STATUS = {
   end: false,
 };
 const PICK_TIME = {
-  start: { hour: 9, min: 18 },
-  end: { hour: 19, min: 12 },
+  start: { hour: 9, min: 20 },
+  end: { hour: 19, min: 10 },
 };
 // 检查间隔时间
 const CHECK_TIME_SPACE = 60 * 1000 * 1;
 const SELF_PACKAGE_NAME = "com.script.pickCard";
+const MAX_PICK_DELAY = 10; // 执行打卡最大延迟时间，min
 
 /**
  * 全局变量
@@ -151,7 +152,16 @@ function checkNeedWakeUp() {
   const needWakeUp = diff > 1000 * 60 * 60 * 8; // 8小时唤醒一次
   // 唤醒屏幕
   if (needWakeUp) {
+    waitTime(1, "应用激活-1");
     device.wakeUp();
+    waitTime(1, "应用激活-2");
+    click(500, 1000);
+    waitTime(1, "应用激活-3");
+    click(500, 1500);
+    waitTime(1, "应用激活-4");
+    click(1000, 1500);
+    waitTime(1, "应用激活-5");
+
     lastWakeUpTime = now;
   }
 }
@@ -188,7 +198,7 @@ function scheduleRandomProgramExecution(executeProgram) {
         updateWorkStatus();
 
         // 随机生成一个介于 0 和 10 之间的整数，表示随机分钟数
-        const randomMinutes = Math.floor(Math.random() * 10);
+        const randomMinutes = Math.floor(Math.random() * (MAX_PICK_DELAY - 1));
         // const randomMinutes = 0;
 
         // 计算实际执行时间
