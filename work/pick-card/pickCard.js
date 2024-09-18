@@ -12,7 +12,7 @@ const DEFAULT_STATUS = {
 };
 const PICK_TIME = {
   start: { hour: 9, min: 20 },
-  end: { hour: 19, min: 10 },
+  end: { hour: 19, min: 45 },
 };
 // 检查间隔时间
 const CHECK_TIME_SPACE = 60 * 1000 * 1;
