@@ -14,10 +14,11 @@ const PICK_TIME = {
   start: { hour: 9, min: 20 },
   end: { hour: 19, min: 45 },
 };
-// 检查间隔时间
-const CHECK_TIME_SPACE = 60 * 1000 * 1;
+
+const CHECK_TIME_SPACE = 5 * 60 * 1000 * 1; // 检查间隔时间
 const SELF_PACKAGE_NAME = "com.script.pickCard";
 const MAX_PICK_DELAY = 10; // 执行打卡最大延迟时间，min
+const WEEKDAYS = [1, 2, 3, 4, 5]; // 1 表示星期一
 
 /**
  * 全局变量
@@ -171,8 +172,6 @@ function checkNeedWakeUp() {
  * @param {any} executeProgram 执行的程序
  */
 function scheduleRandomProgramExecution(executeProgram) {
-  const weekdays = [1, 2, 3, 4, 5]; // 1 表示星期一，以此类推
-
   setInterval(() => {
     const now = new Date();
     const currentDay = now.getDay();
@@ -182,32 +181,34 @@ function scheduleRandomProgramExecution(executeProgram) {
     // 检查是否需要唤醒屏幕
     checkNeedWakeUp();
 
-    // 检查是否是工作日，并且在指定的时间范围内
-    if (
-      weekdays.includes(currentDay) &&
-      ((currentHour === PICK_TIME.start.hour &&
-        currentMinute >= PICK_TIME.start.min) ||
-        (currentHour === PICK_TIME.end.hour &&
-          currentMinute >= PICK_TIME.end.min))
-    ) {
-      // 检查是否可以打卡
-      const allowPickCard = checkWorkStatus();
-      if (allowPickCard) {
-        // 更新每日打卡状态
-        console.log("更新打卡状态");
-        updateWorkStatus();
+    /**
+     * 检查是否是工作日，并且在指定的时间范围内
+     */
+    const isWorkDay = WEEKDAYS.includes(currentDay); // 工作日
+    const allowPickCard = checkWorkStatus(); // 检查是否可以打卡
+    // 开始时间匹配
+    const isStartTime =
+      currentHour === PICK_TIME.start.hour &&
+      currentMinute >= PICK_TIME.start.min;
+    // 结束时间匹配
+    const isEndTime =
+      currentHour === PICK_TIME.end.hour && currentMinute >= PICK_TIME.end.min;
 
-        // 随机生成一个介于 0 和 10 之间的整数，表示随机分钟数
-        const randomMinutes = Math.floor(Math.random() * (MAX_PICK_DELAY - 1));
-        // const randomMinutes = 0;
+    //  开始打卡
+    if (isWorkDay && allowPickCard && (isStartTime || isEndTime)) {
+      // 更新每日打卡状态
+      // console.log("更新打卡状态");
+      updateWorkStatus();
 
-        // 计算实际执行时间
-        const executionTime = new Date(now.getTime() + randomMinutes * 60000);
+      // 随机生成一个介于 0 和 10 之间的整数，表示随机分钟数
+      const randomMinutes = Math.floor(Math.random() * (MAX_PICK_DELAY - 1));
 
-        // 执行程序
-        console.log(`计划在 ${executionTime.toLocaleTimeString()} 执行程序`);
-        setTimeout(executeProgram, randomMinutes * 60000);
-      }
+      // 计算实际执行时间
+      // const executionTime = new Date(now.getTime() + randomMinutes * 60000);
+
+      // 执行程序
+      // console.log(`计划在 ${executionTime.toLocaleTimeString()} 执行程序`);
+      setTimeout(executeProgram, randomMinutes * 60000);
     }
   }, CHECK_TIME_SPACE); // 每隔一段时间检查一次
 }
