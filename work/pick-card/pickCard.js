@@ -12,10 +12,10 @@ const DEFAULT_STATUS = {
 };
 const PICK_TIME = {
   start: { hour: 9, min: 20 },
-  end: { hour: 19, min: 45 },
+  end: { hour: 19, min: 40 },
 };
 
-const CHECK_TIME_SPACE = 5 * 60 * 1000 * 1; // 检查间隔时间
+const CHECK_TIME_SPACE = 2 * 60 * 1000 * 1; // 检查间隔时间
 const SELF_PACKAGE_NAME = "com.script.pickCard";
 const MAX_PICK_DELAY = 10; // 执行打卡最大延迟时间，min
 const WEEKDAYS = [1, 2, 3, 4, 5]; // 1 表示星期一
@@ -197,17 +197,17 @@ function scheduleRandomProgramExecution(executeProgram) {
     //  开始打卡
     if (isWorkDay && allowPickCard && (isStartTime || isEndTime)) {
       // 更新每日打卡状态
-      // console.log("更新打卡状态");
+      console.log("更新打卡状态");
       updateWorkStatus();
 
       // 随机生成一个介于 0 和 10 之间的整数，表示随机分钟数
       const randomMinutes = Math.floor(Math.random() * (MAX_PICK_DELAY - 1));
 
       // 计算实际执行时间
-      // const executionTime = new Date(now.getTime() + randomMinutes * 60000);
+      const executionTime = new Date(now.getTime() + randomMinutes * 60000);
 
       // 执行程序
-      // console.log(`计划在 ${executionTime.toLocaleTimeString()} 执行程序`);
+      console.log(`计划在 ${executionTime.toLocaleTimeString()} 执行程序`);
       setTimeout(executeProgram, randomMinutes * 60000);
     }
   }, CHECK_TIME_SPACE); // 每隔一段时间检查一次
