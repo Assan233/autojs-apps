@@ -29,13 +29,38 @@ let workStatus = Object.assign({}, DEFAULT_STATUS);
 let lastWakeUpTime = Date.now();
 
 /**
- * 功能代码
+ * 工作日 - 被动执行程序
  */
+main();
 function main() {
-  // pickCard();
   scheduleRandomProgramExecution(pickCard);
 }
-main();
+
+/**
+ * 主动执行程序
+ *  - 每10min轮询接口
+ */
+function pollingMain() {
+  const handler = async () => {
+    const needPick = await getPickStatus();
+    if (needPick) {
+      pickCard();
+      // 3min后重置打卡状态
+      setTimeout(resetPickStatus, 3 * 60 * 1000);
+    }
+  };
+  setInterval(handler, 10 * 60 * 1000);
+}
+// 获取打卡状态
+async function getPickStatus() {
+  return fetch("http://localhost:3000/pick-card/pick-status").then((res) =>
+    res.json()
+  );
+}
+// 重置打卡状态
+async function resetPickStatus() {
+  return fetch("http://localhost:3000/pick-card/cancel-pick");
+}
 
 /**
  * 打卡
