@@ -40,27 +40,27 @@ function main() {
  * 主动执行程序
  *  - 每10min轮询接口
  */
-function pollingMain() {
-  const handler = async () => {
-    const needPick = await getPickStatus();
-    if (needPick) {
-      pickCard();
-      // 3min后重置打卡状态
-      setTimeout(resetPickStatus, 3 * 60 * 1000);
-    }
-  };
-  setInterval(handler, 10 * 60 * 1000);
-}
-// 获取打卡状态
-async function getPickStatus() {
-  return fetch("http://localhost:3000/pick-card/pick-status").then((res) =>
-    res.json()
-  );
-}
-// 重置打卡状态
-async function resetPickStatus() {
-  return fetch("http://localhost:3000/pick-card/cancel-pick");
-}
+// function pollingMain() {
+//   const handler = async () => {
+//     const needPick = await getPickStatus();
+//     if (needPick) {
+//       pickCard();
+//       // 3min后重置打卡状态
+//       setTimeout(resetPickStatus, 3 * 60 * 1000);
+//     }
+//   };
+//   setInterval(handler, 10 * 60 * 1000);
+// }
+// // 获取打卡状态
+// async function getPickStatus() {
+//   return fetch("http://localhost:3000/pick-card/pick-status").then((res) =>
+//     res.json()
+//   );
+// }
+// // 重置打卡状态
+// async function resetPickStatus() {
+//   return fetch("http://localhost:3000/pick-card/cancel-pick");
+// }
 
 /**
  * 打卡
@@ -82,11 +82,11 @@ function pickCard() {
   waitTime(3, "消除更新提示");
 
   // 重置钉钉tab聚焦
-  text("消息").findOnce().parent().parent().click();
+  text("消息").findOnce().parent().click();
   waitTime(5, "切换消息Tab");
 
   // 打开工作台
-  text("工作台").findOnce().parent().parent().click();
+  text("工作台").findOnce().parent().click();
   waitTime(8, "打开工作台");
 
   // 打开考勤系统
