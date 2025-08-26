@@ -69,7 +69,7 @@ function pickCard() {
   // 唤醒屏幕
   device.wakeUp();
   waitTime(5, "唤醒屏幕");
-  const points = getPoints(DEVICE_TYPE.k40);
+  const points = getPoints(DEVICE_TYPE.realmeX);
 
   // 启动应用
   var packageName = app.getPackageName("钉钉");
@@ -120,8 +120,8 @@ function getPoints(type) {
     }
     case DEVICE_TYPE.realmeX: {
       return {
-        kqPoint: [130, 1425],
-        pickPoint: [530, 1835],
+        kqPoint: [150, 1060],
+        pickPoint: [500, 1800],
       };
     }
   }
