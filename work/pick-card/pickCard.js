@@ -27,10 +27,13 @@ const WEEKDAYS = [1, 2, 3, 4, 5]; // 1 表示星期一
 let workStatus = Object.assign({}, DEFAULT_STATUS);
 // 上一次唤醒屏幕的时间
 let lastWakeUpTime = Date.now();
+// 是否正在打卡
+let picking = false;
 
 /**
  * 工作日 - 被动执行程序
  */
+// pickCard();
 main();
 function main() {
   scheduleRandomProgramExecution(pickCard);
@@ -66,6 +69,7 @@ function main() {
  * 打卡
  */
 function pickCard() {
+  picking = true;
   // 唤醒屏幕
   device.wakeUp();
   waitTime(5, "唤醒屏幕");
@@ -104,6 +108,8 @@ function pickCard() {
   // 唤醒打卡软件到前台
   launch(SELF_PACKAGE_NAME);
   waitTime(5, "唤醒打卡软件到前台");
+
+  picking = false;
 }
 
 /**
@@ -220,7 +226,7 @@ function scheduleRandomProgramExecution(executeProgram) {
       currentHour === PICK_TIME.end.hour && currentMinute >= PICK_TIME.end.min;
 
     //  开始打卡
-    if (isWorkDay && allowPickCard && (isStartTime || isEndTime)) {
+    if (!picking && isWorkDay && allowPickCard && (isStartTime || isEndTime)) {
       // 更新每日打卡状态
       console.log("更新打卡状态");
       updateWorkStatus();
