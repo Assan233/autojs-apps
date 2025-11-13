@@ -19,6 +19,7 @@ const CHECK_TIME_SPACE = 2 * 60 * 1000 * 1; // 检查间隔时间
 const SELF_PACKAGE_NAME = "com.script.pickCard";
 const MAX_PICK_DELAY = 10; // 执行打卡最大延迟时间，min
 const WEEKDAYS = [1, 2, 3, 4, 5]; // 1 表示星期一
+const DOM_CLICK_OFFSET = 10; // 点击偏移量阈值
 
 /**
  * 全局变量
@@ -81,16 +82,15 @@ function pickCard() {
   waitTime(15, "等待钉钉启动");
 
   // 消除更新提示
-  const updateDom = text("暂不更新").findOnce();
-  updateDom && updateDom.click();
+  clickByText("暂不更新");
   waitTime(3, "消除更新提示");
 
   // 重置钉钉tab聚焦
-  text("消息").findOnce().parent().click();
+  clickByText("消息");
   waitTime(5, "切换消息Tab");
 
   // 打开工作台
-  text("工作台").findOnce().parent().click();
+  clickByText("工作台");
   waitTime(8, "打开工作台");
 
   // 打开考勤系统
@@ -292,13 +292,12 @@ function killApp(appName) {
         if (forcedStop.enabled()) {
           // 点击-强行停止
           text("强行停止").waitFor();
-          var killBtn = text("强行停止").findOne().bounds();
-          click(killBtn.centerX(), killBtn.centerY());
+          clickByText("强行停止");
           waitTime(1, "点击-强行停止");
 
           // 点击-确定
           forcedStop.click();
-          text("强行停止").findOne().click();
+          clickByText("强行停止");
           waitTime(1, "点击 强行停止-确定");
           home();
           break;
@@ -306,4 +305,20 @@ function killApp(appName) {
       }
     }
   }
+}
+
+/**
+ * 通过文本查找元素并触发点击
+ */
+function clickByText(textStr) {
+  const dom = text(textStr).findOne(100);
+  if (!dom) {
+    log("未找到元素：", textStr);
+    return;
+  }
+
+  const bounds = dom.bounds();
+  const x = bounds.centerX() + DOM_CLICK_OFFSET;
+  const y = bounds.centerY() + DOM_CLICK_OFFSET;
+  click(x, y);
 }
