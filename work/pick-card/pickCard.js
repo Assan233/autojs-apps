@@ -228,7 +228,7 @@ function scheduleRandomProgramExecution(executeProgram) {
     //  开始打卡
     if (!picking && isWorkDay && allowPickCard && (isStartTime || isEndTime)) {
       // 更新每日打卡状态
-      console.log("更新打卡状态");
+      log("更新打卡状态");
       updateWorkStatus();
 
       // 随机生成一个介于 0 和 10 之间的整数，表示随机分钟数
@@ -238,7 +238,7 @@ function scheduleRandomProgramExecution(executeProgram) {
       const executionTime = new Date(now.getTime() + randomMinutes * 60000);
 
       // 执行程序
-      console.log(`计划在 ${executionTime.toLocaleTimeString()} 执行程序`);
+      log(`计划在 ${executionTime.toLocaleTimeString()} 执行程序`);
       setTimeout(executeProgram, randomMinutes * 60000);
     }
   }, CHECK_TIME_SPACE); // 每隔一段时间检查一次
